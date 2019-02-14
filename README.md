@@ -1,68 +1,62 @@
-# Frontend Boilerplate with React, Redux & TypeScript
+# react-server-example-tsx
 
-A bare minimum react-redux-webpack-typescript boilerplate with TodoMVC example. 
+[![npm](https://badgen.net/npm/v/react-server-example-tsx)](https://www.npmjs.com/package/react-server-example-tsx)
+[![Downloads](https://badgen.net/npm/dt/react-server-example-tsx)](https://www.npmjs.com/package/react-server-example-tsx)
+[![Dependency Status](https://badgen.net/david/dep/styfle/react-server-example-tsx)](https://david-dm.org/styfle/react-server-example-tsx)
+[![devDependency Status](https://badgen.net/david/dev/styfle/react-server-example-tsx)](https://david-dm.org/styfle/react-server-example-tsx?type=dev)
+[![LGTM Quality](https://badgen.net/lgtm/grade/javascript/g/styfle/react-server-example-tsx)](https://lgtm.com/projects/g/styfle/react-server-example-tsx/)
+[![Build Status](https://badgen.net/travis/styfle/react-server-example-tsx)](https://travis-ci.org/styfle/react-server-example-tsx)
 
-[Live demo](https://rokoroku.github.io/react-redux-typescript-boilerplate)
+A complex example of how to do server-side rendering with
+[React](http://facebook.github.io/react/) and [TypeScript](https://www.typescriptlang.org/) so that component code can be shared between server and browser (also known as isomorphic javascript).
 
-Note that this project does not include **Server-Side Rendering**, **Static code analysis**, **Testing Frameworks** and other stuffs that makes the package unnecessarily complicated. (e.g. yarn, tslint, jest, ...)  
-If needed, please fork this repository and add your own that meets your requirements.
+Server-Side Rendering (SSR) leads to fast initial page loads, search-engine-friendly pages, and of course...its all type safe!
 
-Ideal for creating React apps from the scratch.
 
-See also: [react-mobx-typescript-boilerplate](https://github.com/rokoroku/react-mobx-typescript-boilerplate)
+## Getting Started
 
-## Contains
+Clone the repo, change directory, install dependencies, build the code, and run it!
 
-- [x] [Typescript](https://www.typescriptlang.org/) 3
-- [x] [React](https://facebook.github.io/react/) 16.7
-- [x] [Redux](https://github.com/reactjs/redux) 4
-- [x] [React Router](https://github.com/ReactTraining/react-router) 4.3
-- [x] [Redux DevTools Extension](https://github.com/zalmoxisus/redux-devtools-extension)
-- [x] [TodoMVC example](http://todomvc.com)
-
-### Build tools
-
-- [x] [Webpack](https://webpack.github.io) 4
-  - [x] [Tree Shaking](https://medium.com/@Rich_Harris/tree-shaking-versus-dead-code-elimination-d3765df85c80)
-  - [x] [Webpack Dev Server](https://github.com/webpack/webpack-dev-server)
-- [x] [Typescript Loader](https://github.com/TypeStrong/ts-loader)
-- [x] [PostCSS Loader](https://github.com/postcss/postcss-loader)
-  - [x] [PostCSS Preset Env](https://preset-env.cssdb.org/)
-  - [x] [CSS modules](https://github.com/css-modules/css-modules)
-- [x] [React Hot Loader](https://github.com/gaearon/react-hot-loader)
-- [x] [Mini CSS Extract Plugin](https://github.com/webpack-contrib/mini-css-extract-plugin)
-- [x] [HTML Webpack Plugin](https://github.com/ampedandwired/html-webpack-plugin)
-
-## Installation
-
-```
-$ npm ci
+```sh
+git clone https://github.com/styfle/react-server-example-tsx.git
+cd react-server-example-tsx
+npm install
+npm run build
+npm run test
+npm start
 ```
 
-## Running
+Then navigate to http://localhost:3007 and click on the buttons to see some reactive events in action.
 
-```
-$ npm start
-```
+## Deployment
 
-## Build
 
-```
-$ npm run build
-```
+<a href="https://www.heroku.com/deploy/?template=https://github.com/styfle/react-server-example-tsx"><img src="https://www.herokucdn.com/deploy/button.svg" alt="Deploy to Heroku" height="25px"></a>
 
-## Deploy (to the [GitHub Pages](https://pages.github.com/))
+<a href="https://deploy.now.sh/?repo=https://github.com/styfle/react-server-example-tsx"><img src="https://deploy.now.sh/static/button.svg" alt="Deploy to Now" height="25px"></a>
 
-```
-$ npm run deploy
+Don't forget to set the environment variable `NODE_ENV=production` to avoid the slower, dev version of React. Like so:
+
+```sh
+npx now -e NODE_ENV=production styfle/react-server-example-tsx
 ```
 
-## Format code (using [Prettier](https://github.com/prettier/prettier))
+## Preventing XSS
 
-```
-$ npm run prettier
-```
+The original code from `mhart` attempts to [sanitize the props](https://github.com/mhart/react-server-example/blob/feada6183fe2fbb1a746492e157febe49eeafdcd/server.js#L106) by escaping and then inserting into a `<script>` tag.
 
-# License
+I avoided this by performing *1 extra http request* to fetch the props as json before initializing React in the browser. This means that click handlers will not be initialized until the data is returned and React can pick up where it left off after the server-side render and attach the click even handlers. This is the purpose of `ReactDOM.hydrate`.
 
-MIT
+See [browser.tsx](https://github.com/styfle/react-server-example-tsx/blob/master/src/browser.tsx) for the client-side code.
+
+See [server.ts](https://github.com/styfle/react-server-example-tsx/blob/master/src/server.ts) for the server-side code.
+
+## Prior art
+
+Based on prior work found at [mhart/react-server-example](https://github.com/mhart/react-server-example). It's very good so you should check it out :)
+
+Additionally, I use a combination between [TypeScript Handbook](https://www.typescriptlang.org/docs/handbook/react-&-webpack.html#create-a-webpack-configuration-file) and [awesome-typescript-loader](https://github.com/s-panferov/awesome-typescript-loader#configuration) when I switched from browserify v1.4.x to webpack v2.0.x (now webpack v3.x).
+
+## Author
+
+Developed by [ceriously.com](https://www.ceriously.com), the author of [Package Phobia](https://github.com/styfle/packagephobia)
